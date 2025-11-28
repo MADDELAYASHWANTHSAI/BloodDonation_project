@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLOOD DONATION</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'images/logo.jpeg' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('{% static "images/bg.jpg" %}') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background: transparent;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 400px;
+            
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 1.8em;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: block;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-bottom: 0.5rem;
+            transition: border-color 0.3s;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #2575fc;
+            color: #fff;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background: #0056b3;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9em;
+        }
+
+        .forgot-password a {
+            color: #2575fc;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <form method="POST" action="{% url 'login' %}" id="loginForm">
+            {% csrf_token %}
+            <h2>Login</h2>
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+            <div class="input-group">
+                <label for="username" aria-label="Enter your username">Username:</label>
+                <input type="text" id="username" name="username" required aria-required="true">
+            </div>
+            <div class="input-group">
+                <label for="password" aria-label="Enter your password">Password:</label>
+                <input type="password" id="password" name="password" required aria-required="true">
+            </div>
+            <input type="submit" value="Login">
+            <div class="forgot-password">
+                <a href="#">Forgot your password?</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            let username = document.getElementById('username').value;
+            let password = document.getElementById('password').value;
+
+            // Validate empty fields
+            if (username === "" || password === "") {
+                alert("Please fill out all fields.");
+                event.preventDefault();
+                return;
+            }
+
+            // Validate password length
+            if (password.length < 6) {
+                alert("Password must be at least 6 characters long.");
+                event.preventDefault();
+                return;
+            }
+
+            // Validate username format (only alphanumeric characters and underscores)
+            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                alert("Username can only contain letters, numbers, and underscores.");
+                event.preventDefault();
+                return;
+            }
+        });
+    </script>
+</body>
+</html>

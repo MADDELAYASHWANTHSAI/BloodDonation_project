@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camp Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f7fc;
+        }
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        form {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Camp Registration</h2>
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_organization_type">Organization Type</label>
+                {{ form.organization_type }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_organization_name">Organization Name</label>
+                {{ form.organization_name }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_organizer_name">Organizer Name</label>
+                {{ form.organizer_name }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_organizer_mobile">Organizer Mobile</label>
+                {{ form.organizer_mobile }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_organizer_email">Organizer Email</label>
+                {{ form.organizer_email }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_co_organizer_name">Co-Organizer Name</label>
+                {{ form.co_organizer_name }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_co_organizer_mobile">Co-Organizer Mobile</label>
+                {{ form.co_organizer_mobile }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_camp_name">Camp Name</label>
+                {{ form.camp_name }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_camp_address">Camp Address</label>
+                {{ form.camp_address }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_state">State</label>
+                {{ form.state }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_district">District</label>
+                <select id="id_district" name="district">
+                    <option value="">Select District</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="id_city_name">City Name</label>
+                {{ form.city_name }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_bloodbank">Blood Bank</label>
+                {{ form.bloodbank }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_camp_propose_date">Camp Proposed Date</label>
+                {{ form.camp_propose_date }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_start_time">Start Time</label>
+                {{ form.start_time }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_end_time">End Time</label>
+                {{ form.end_time }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_latitude">Latitude</label>
+                {{ form.latitude }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_longitude">Longitude</label>
+                {{ form.longitude }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_estimated_participants">Estimated Participants</label>
+                {{ form.estimated_participants }}
+            </div>
+
+            <div class="form-group">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Listen for changes on the state dropdown
+            $('#id_state').change(function() {
+                var state = $(this).val();  // Get the selected state
+                if (state) {
+                    // Make an AJAX request to fetch the districts for the selected state
+                    $.ajax({
+                        url: "{% url 'get_districts' %}",
+                        data: {
+                            'state': state
+                        },
+                        success: function(data) {
+                            // Clear previous district options
+                            $('#id_district').empty().append('<option value="">Select District</option>');
+                            
+                            // Add new district options based on the response
+                            data.districts.forEach(function(district) {
+                                $('#id_district').append('<option value="' + district[0] + '">' + district[1] + '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    // If no state is selected, clear the district options
+                    $('#id_district').empty().append('<option value="">Select District</option>');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

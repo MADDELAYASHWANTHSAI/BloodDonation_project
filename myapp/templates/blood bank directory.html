@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nearest Blood Bank</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        form {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        form select, form input, form button {
+            padding: 10px;
+            margin: 5px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        table th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .blood-compatibility {
+            text-align: center;
+            padding: 50px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .compatibility-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 20px;
+            
+        }
+        .compatibility-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 30%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        select {
+            padding: 8px;
+            width: 100%;
+        }
+    </style>    
+    
+</head>
+<body>
+    <div class="container">
+        <h1>Nearest Blood Bank (BB)/Blood Storage Unit (BSU)</h1>
+        <form method="get">
+            <select name="state" id="state">
+                <option value="">Select State</option>
+                <!-- Populate with states -->
+            </select>
+            <select name="district" id="district">
+                <option value="">Select District</option>
+                <!-- Populate with districts -->
+            </select>
+            <input type="text" name="search" placeholder="Blood Bank or Hospital Name">
+            <button type="submit">Search</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Category</th>
+                    <th>Distance (km)</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bank in blood_banks %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ bank.name }}</td>
+                    <td>{{ bank.address }}</td>
+                    <td>{{ bank.phone }}</td>
+                    <td>{{ bank.email }}</td>
+                    <td>{{ bank.category }}</td>
+                    <td>{{ bank.distance }}</td>
+                    <td>{{ bank.bank_type }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8">No data available</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="blood-compatibility">
+        <h2>Compatible Blood Type Donors</h2>
+        <div class="compatibility-container">
+            <div class="compatibility-card">
+                <h3>Receive From</h3>
+                <p id="receive-from">A+, A-, O+, O-</p>
+            </div>
+            <div class="compatibility-card">
+                <h3>Blood Group</h3>
+                <select id="blood-group" onchange="updateCompatibility()">
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                </select>
+            </div>
+            <div class="compatibility-card">
+                <h3>Donate To</h3>
+                <p id="donate-to">A+, AB+</p>
+            </div>
+        </div>
+    </div>
+   
+</body>
+<script>
+    // Add JavaScript if needed for interactivity, like geolocation
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("Page loaded");
+});
+
+    const bloodCompatibility = {
+        "A+": { receive: ["A+", "A-", "O+", "O-"], donate: ["A+", "AB+"] },
+        "A-": { receive: ["A-", "O-"], donate: ["A+", "A-", "AB+", "AB-"] },
+        "B+": { receive: ["B+", "B-", "O+", "O-"], donate: ["B+", "AB+"] },
+        "B-": { receive: ["B-", "O-"], donate: ["B+", "B-", "AB+", "AB-"] },
+        "AB+": { receive: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"], donate: ["AB+"] },
+        "AB-": { receive: ["A-", "B-", "AB-", "O-"], donate: ["AB+", "AB-"] },
+        "O+": { receive: ["O+", "O-"], donate: ["O+", "A+", "B+", "AB+"] },
+        "O-": { receive: ["O-"], donate: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"] }
+    };
+    function updateCompatibility() {
+        const selectedBloodGroup = document.getElementById("blood-group").value;
+        const receiveFrom = bloodCompatibility[selectedBloodGroup].receive.join(", ");
+        const donateTo = bloodCompatibility[selectedBloodGroup].donate.join(", ");
+        document.getElementById("receive-from").textContent = receiveFrom;
+        document.getElementById("donate-to").textContent = donateTo;
+    }
+
+</script>
+</html>

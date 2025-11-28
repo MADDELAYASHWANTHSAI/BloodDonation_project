@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Stock Availability</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Blood Stock Availability</h1>
+        <nav>
+            
+            <a href="#">Looking for Blood</a>
+            <a href="#">Want to Donate Blood</a>
+            
+        </nav>
+    </header>
+    <main>
+        <form method="GET" action="#">
+            <label for="state">Select State:</label>
+            <select id="state" name="state">
+                <option value="">Select State</option>
+                {% for state in states %}
+                <option value="{{ state.id }}">{{ state.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="district">Select District:</label>
+            <select id="district" name="district">
+                <option value="">Select District</option>
+                {% for district in districts %}
+                <option value="{{ district.id }}">{{ district.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="blood_group">Blood Group:</label>
+            <select id="blood_group" name="blood_group">
+                <option value="">Select Blood Group</option>
+                {% for group in blood_groups %}
+                <option value="{{ group }}">{{ group }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="component">Component:</label>
+            <select id="component" name="component">
+                <option value="">Select Component</option>
+                <option value="Whole Blood">Whole Blood</option>
+                <option value="Platelet Concentrate">Platelet Concentrate</option>
+                <option value="Plasma">Plasma</option>
+                <option value="Cryoprecipitate">Cryoprecipitate</option>
+            </select>
+
+            <button type="submit">Search</button>
+        </form>
+
+        <div id="results">
+            {% if results %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Blood Bank</th>
+                        <th>Stock</th>
+                        <th>Category</th>
+                        <th>Availability</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                    <tr>
+                        <td>{{ result.blood_bank }}</td>
+                        <td>{{ result.stock }}</td>
+                        <td>{{ result.category }}</td>
+                        <td>{{ result.availability }}</td>
+                        <td>{{ result.type }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No data available. Please select state and district to view stock.</p>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>
